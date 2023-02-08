@@ -1,60 +1,92 @@
-let saldo = 300,
-  total,
-  producto,
-  continuar=true,
-  cantidad,
-  conformidad = 2;
 
-function seleccion(){
-    while (conformidad == 2) {
-        producto = parseInt(prompt("Que productos desea añadir a su carito?\nEscriba el numero del producto para añadirlo\n1)Pantalon\n2)Polo\n3)Polera"));
-        if(producto>3){
-            alert("Por favor infgrese un elemento valido")
-            seleccion();
-        }
-        cantidad = parseInt(prompt("Cuantas unidades desea?"));  
-        conformidad = prompt("Esta conforme con su compra o desea cambiar de producto?\n1)continuar\n2)Cambiar de producto");
-        if(conformidad>2){
-            alert("Por favor infgrese una opcion valida")
-            seleccion();
-        }
-      }
-      calculo();
+// Declaracion de un array con objetos de los productos y precio
+const productos=[
+    {nombre: "pantalon", precio:50},
+    {nombre: "polo", precio:40},
+    {nombre: "polera", precio:60},
+    {nombre: "zapatilla", precio:100},
+    {nombre: "camisa", precio:110},
+    {nombre: "gorro", precio:20},
+    {nombre: "pulsera", precio:10},
+];
+
+let carrito = []
+
+let seleccion = prompt("Bienvenido a nuestra tienda, desea ver los productos?");
+
+// BUCLE QUE COMPRUEBA QUE EL INGRESO SEA SI O NO
+
+while (seleccion != "si" && seleccion != "no"){
+    alert("Por favor ingresar si o no");
+    seleccion = prompt("Bienvenido a nuestra tienda, desea ver los productos?");
 }
 
-function calculo(){
+if (seleccion == "si"){
+    let allProducts = productos.map(
+        (producto) => producto.nombre + " " + producto.precio + "$")
+    alert(allProducts.join("\n"));
+}else if (seleccion == "no"){
+    alert("Gracias por tu visita! :D")
+}
 
-    const precioPantalon= 40;
-    const precioPolo = 20;
-    const precioPolera = 50;
+// CON OTRO BUCLE TENEMOS AL CLIENTE REALIZANDO OPERACIONES HASTA QUE DECIDA PARAR
+// CON UN "CASE" DEPENDIENDO DE LA SELECCION DA EL PRECIO
 
-    if (producto == 1) {
-        total=precioPantalon * cantidad;
+while (seleccion != "no"){
+    let producto = prompt("Agrega un producto  tu carrito escribiendo su nombre");
+    let precio= 0;
+
+    if (producto == "pantalon" || producto == "polo" || producto == "polera" || producto == "zapatilla" ||
+    producto == "camisa" || producto == "gorro" || producto == "pulsera"){
+        switch(producto){
+            case "pantalon":
+            precio = 50
+            break;
+            case "polo":
+            precio = 40
+            break;
+            case "polera":
+            precio = 60
+            break;
+            case "zapatilla":
+            precio = 100
+            break;
+            case "camisa":
+            precio = 110
+            break;
+            case "gorro":
+            precio = 20
+            break;
+            case "pulsera":
+            precio = 10
+            break;
+            default:
+                break;
+            
+        }
+        let unidades = parseInt(prompt("Cuantos desea?"))
+
+        carrito.push({producto, unidades, precio})//AQUI GUARDAMOS LOS DATOS DE LOS PRODUCTOS AL CARRITO EN FORMA DE OBJETOS
+        carritoshowcase()
+    }else{
+        alert("No contamos con el producto")
     }
-    else if (producto == 2){
-        total=precioPolo * cantidad;
-    }
-    else if (producto == 3){
-        total=precioPolera * cantidad;
-    }   
-    else{
-        alert("Por favor ingrese un producto valido")
+    seleccion = prompt("Desea seguir comprando?")
+    while(seleccion == "no"){
+        alert("gracias por preferirnos, vuelva pronto")
+        carritoshowcase()
+        break;
     }
 }
 
-do {
-    seleccion();
+const total = carrito.reduce((acc, el) => acc + el.precio * el.unidades, 0)
+alert("El total a pagar por su compra es: "  + total)
 
-    alert("El total a pagar es de "+ total+"$");
-    conformidad = confirm("Desea pagar?,\nSu saldo actual es de "+saldo+"$");
-    if (conformidad==true) {
-        saldo-=total;
-        alert("Compra exitosa, Su saldo actual es de "+saldo+"$")
-    }else if(conformidad==false){
-        alert("Eliminando Objeto del carrito")
-    }
-    continuar=confirm("Desea Continuar comprando")
-    conformidad=2;
-} while (continuar==true);
+// FUNCION QUE NOS DA EL ESTADO ACTUAL DEL CARRITO RECORRIENDO EL ARRAY DE CARRITO
 
-alert("Gracias por Visitarnos");
+function carritoshowcase(){
+    carrito.forEach((showproducts) =>{
+        alert("------Carrito de compra------\n" + "Producto: " + showproducts.producto + "\nUnidades: " + showproducts.unidades +
+        "\nTotal: " + showproducts.unidades*showproducts.precio)
+    })
+}
